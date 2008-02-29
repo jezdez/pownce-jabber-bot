@@ -1,6 +1,7 @@
 JABBER_ID = 'whatever@example.com'
 JABBER_PASSWORD = '123456'
 JABBER_RESOURCE = 'bot'
+# important for the admin functionality
 ADMINS = (
     ('Ad Min', 'admin@example.com'),
 )
