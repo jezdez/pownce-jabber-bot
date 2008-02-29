@@ -8,14 +8,11 @@ import inspect
 import logging
 import optparse
 
-from django.utils.daemonize import become_daemon
-from django.dispatch import dispatcher
 from django.conf import settings
 from django.core import management
 
 # relative import because of weird double signaling of post_save signal 
 from powncebot.models import User, Note, pownce_login, ALLOWED_RECEIVERS, APP_PATH
-from powncebot.signals import post_message_sent
 
 URL_RE = re.compile(r'^https?://\S+$')
 DEFAULT_STATUS = 'Send stuff! (or HELP for more information)'
@@ -252,6 +249,7 @@ class PownceJabberBot(object):
         body = text[:-1]
         receiver = ALLOWED_RECEIVERS.get(text[-1], None)
         if receiver is None:
+            receiver = 'public'
             body = text
         try:
             user = User.objects.get(jid= mess.getFrom().__str__())
@@ -260,7 +258,7 @@ class PownceJabberBot(object):
         else:
             self.log("message: new message from %s: %s" % (user.username, body))
             self.send(mess.getFrom(), "Just a moment please.", mess)
-            Note.objects.create(user=user, body=" ".join(body), type="message", to=receiver)
+            Note.objects.create(user=user, body=" ".join(body), typ="message", to=receiver)
     cmd_message.usage = "NOTE [RECEIVER]"
     cmd_message.alias = ('note', 'msg')
     
@@ -286,7 +284,7 @@ class PownceJabberBot(object):
         else:
             self.log("link: new link from %s: %s %s" % (user.username, body, url))
             self.send(mess.getFrom(), "Posting link..", mess)
-            Note.objects.create(user=user, body=" ".join(body), type="link", link=url, to=receiver)
+            Note.objects.create(user=user, body=" ".join(body), typ="link", link=url, to=receiver)
     cmd_link.usage = "URL [NOTE] [RECEIVER]"
     cmd_link.alias = ('url',)
 
