@@ -1,5 +1,9 @@
 Please have a look at http://code.google.com/p/pownce-jabber-bot/ for details
 of installation and use.
 
+For the moment, run "twistd -noy powncebot.tac" to start the bot.
+
+Don't forget to set the settings in powncebot/settings.py
+
 Cheers,
 Jannis
