@@ -11,7 +11,7 @@ pownce-api
 simplejson
 twisted
 wokkel
-
+sqlalchemy
 
 Cheers,
 jezdez
