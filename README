@@ -5,5 +5,13 @@ For the moment, run "twistd -noy powncebot.tac" to start the bot.
 
 Don't forget to set the settings in powncebot/settings.py
 
+Dependencies:
+
+pownce-api
+simplejson
+twisted
+wokkel
+
+
 Cheers,
-Jannis
+jezdez
