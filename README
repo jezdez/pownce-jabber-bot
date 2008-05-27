@@ -7,11 +7,12 @@ Don't forget to set the settings in powncebot/settings.py
 
 Dependencies:
 
-pownce-api
-simplejson
-twisted
-wokkel
-sqlalchemy
+"sqlalchemy==0.4.6"
+"Twisted>=8.0.1"
+"wokkel>=0.3.1"
+"pownce-api"
+"simplejson"
+
 
 Cheers,
 jezdez

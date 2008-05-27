@@ -12,13 +12,26 @@ from powncebot import settings
 class Api(pownce.Api):
     def send_to_default(self):
         """
-        Gets the list of potential recipients for the authenticated user.
+        Gets the default send_to for the authenticated user.
         """
         query_dict = {'app_key' : self.app_key}
         url = '%ssend/send_to.json?%s' % (self.API_URL, urlencode(query_dict))
         json_obj = simplejson.loads(self._fetch(url))
         if 'selected' in json_obj.keys():
             return json_obj['selected']
+        elif 'error' in json_obj.keys():
+            error_class = self.ERROR_MAPPING[json_obj['error']]
+            raise error_class("Error retrieving 'send_to' list: %s" % error['message'])
+
+    def send_to_list(self):
+        """
+        Gets the list of potential recipients for the authenticated user.
+        """
+        query_dict = {'app_key' : self.app_key}
+        url = '%ssend/send_to.json?%s' % (self.API_URL, urllib.urlencode(query_dict))
+        json_obj = simplejson.loads(self._fetch(url))
+        if 'users' in json_obj.keys():
+            return [User(user_dict) for user_dict in json_obj]
         elif 'error' in json_obj.keys():
             error_class = self.ERROR_MAPPING[json_obj['error']]
             raise error_class("Error retrieving 'send_to' list: %s" % error['message'])
@@ -49,16 +62,3 @@ class User(object):
 
     def __repr__(self):
         return "<User('%s, '%s')>" % (self.username, self.jid)
-
-def login(username, password):
-    """
-    Tries to login to pownce.com with the given credentials and return
-    an api and a user object if successful.
-    """
-    api = Api(username, password, settings.APPLICATION_KEY)
-    try:
-        user = api.get_user(username)
-    except HTTPError:
-        raise pownce.AuthenticationRequired
-    else:
-        return api

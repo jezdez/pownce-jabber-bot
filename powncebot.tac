@@ -1,23 +1,37 @@
-from twisted.words.protocols.jabber import jid
+from twisted.words.protocols.jabber.jid import JID
 from twisted.application import service
 from wokkel import client, xmppim
 
-from powncebot import settings
-from powncebot.bot import PownceBot
+from powncebot import settings, PownceBot
 
-username = jid.JID(settings.JABBER_ID)
-password = settings.JABBER_PASSWORD
+DEFAULT_STATUS = {None: "Send stuff! (or 'help' for more information)"}
 
-application = service.Application('PownceJabberBot')
-client = client.XMPPClient(username, password)
+class BotPresenceClientProtocol(xmppim.PresenceClientProtocol):
+    """
+    A custom presence protocol to automatically accept any subscription
+    attempt.
+    """
+    def subscribeReceived(self, entity):
+        self.subscribed(entity)
+        self.available(statuses=DEFAULT_STATUS)
+
+    def unsubscribeReceived(self, entity):
+        self.unsubscribed(entity)
+
+
+jid = JID(settings.JABBER_ID)
+application = service.Application('powncebot')
+
+client = client.XMPPClient(jid, settings.JABBER_PASSWORD)
 client.logTraffic = True
 client.setServiceParent(application)
 
-DEFAULT_STATUS = {'en': "Send stuff! (or 'help' for more information)"}
-
-presence = xmppim.PresenceClientProtocol()
+presence = BotPresenceClientProtocol()
 presence.setHandlerParent(client)
 presence.available(statuses=DEFAULT_STATUS)
 
-bot = PownceBot(username)
+roster = xmppim.RosterClientProtocol()
+roster.setHandlerParent(client)
+
+bot = PownceBot(jid)
 bot.setHandlerParent(client)
