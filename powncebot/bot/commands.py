@@ -32,6 +32,7 @@ class Command(object):
                 return True
         return False
 
+
 class unknown(Command):
     """Unknown command. Type "help" for available commands."""
 
@@ -173,6 +174,7 @@ class message(Command):
         else:
             return self.send("Please register your Pownce account first.")
 
+
 ##### Hier weiter machen ### TODO
 # class link(Command):
 #     "Posts a link. Optional: NOTE, SEND_TO (@public, @all or @friend_<username>)."
@@ -209,6 +211,7 @@ class message(Command):
 # cmd_link.alias = ('url',)
 # 
 
+
 class about(Command):
     "Sends an about message."
 
@@ -216,6 +219,7 @@ class about(Command):
         Command.__init__(self, parent, message)
 
         return self.send("I'm a jabber bot. My creator is jezdez.")
+
 
 class greeting(Command):
     "Sends a greeting."
@@ -225,6 +229,7 @@ class greeting(Command):
         
         self.aliases = GREETINGS
         return self.send(random.choice(GREETINGS).capitalize()+"!")
+
 
 class ping(Command):
     "Sends a pong."
