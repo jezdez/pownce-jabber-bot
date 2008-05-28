@@ -21,14 +21,14 @@ class UserDoesNotExist(Exception):
 
 class Command(object):
     """Abstract base command that shows how commands are structered"""
-    
+
     aliases = ()
-    
+
     def __init__(self, parent, message):
         self.parent = parent
         self.message = message
         self.jid = JID(self.message['from']).userhost()
-    
+
     def guide(self):
         """
         Thou shalt be guided by this magic inscription.
@@ -100,7 +100,7 @@ class help(Command):
         Command.__init__(self, parent, message)
 
         self.commands = commands
-        
+
         if self.commands:
             usage_commands = []
             for command in self.commands:
@@ -208,13 +208,13 @@ class unregister(Command):
 
 class message(Command):
     "Posts a message. Optional: SEND_TO (@public, @all, @set_<NAME> or @<username>)."
-    
+
     usage = "[SEND_TO] NOTE"
     aliases = ('note', 'msg')
-    
+
     def __init__(self, parent, message, *text):
         Command.__init__(self, parent, message)
-        
+
         try:
             if not text:
                 raise GuidanceNeeded
@@ -228,10 +228,10 @@ class message(Command):
                 to = api.send_to_default()
             else:
                 text = text[1:]
-            
+
             if not text:
                 raise GuidanceNeeded
-            
+
             reply = api.post_message(to, " ".join(text))
 
         except UserDoesNotExist:
@@ -292,7 +292,7 @@ class link(Command):
             url = text[0]
             if not URL_RE.search(url):
                 return self.send("A valid URL is required.")
-            
+
             if len(text) > 1:
                 body = text[1:]
                 if body[0] == "[%s]" % url: # weird iChat bug
@@ -343,7 +343,7 @@ class about(Command):
 
 class greeting(Command):
     "Sends a greeting."
-    
+
     aliases = (
         "hi",
         "oi",
@@ -366,6 +366,7 @@ class greeting(Command):
         "bonjour",
         "merhaba",
         "namaste",
+        "moinmoin",
     )
 
     def __init__(self, parent, message, *text):
