@@ -1,0 +1,9 @@
+# Eclipse Project Files
+.project
+.pydevproject
+
+# temp and generated files
+local_settings.py
+*~
+*.pyc
+*.pyo
