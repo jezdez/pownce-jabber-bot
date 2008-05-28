@@ -46,7 +46,7 @@ class PownceBot(MessageProtocol):
         """Messages sent to the bot will arrive here. Command handling routing
         is done in this function."""
         if not isinstance(message.body, DomishElement):
-            return
+            return None
 
         text = unicode(message.body).encode('utf-8').strip()
         cmdargs = text.split()
