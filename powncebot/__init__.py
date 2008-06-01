@@ -2,6 +2,7 @@ import inspect
 
 from twisted.python import log
 from twisted.words.xish import domish
+from twisted.words.xish.domish import Element as DomishElement
 
 from wokkel.xmppim import MessageProtocol
 
@@ -44,10 +45,10 @@ class PownceBot(MessageProtocol):
     def onMessage(self, message):
         """Messages sent to the bot will arrive here. Command handling routing
         is done in this function."""
-        text = unicode(message.body)
-        text = text.strip()
-        if not text:
-            return
+        if not isinstance(message.body, DomishElement):
+            return None
+
+        text = unicode(message.body).encode('utf-8').strip()
         cmdargs = text.split()
         command = cmdargs[0].lower()
         args = cmdargs[1:]
